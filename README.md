@@ -11,3 +11,15 @@ OPENCENSUS and MIDDLEWARE
 LOGGING
 * Logging is currently commented out to analyse a request issue.
 
+## Build Instructions
+* Rename env.txt to .env
+* Add your appinsights instrumentation key
+* Open terminal in root directory
+* type `docker build -t example .`
+
+## Run instructions
+* Open terminal in root directory
+* type `docker run -p 8000:8000 --env-file .env example`
+* DJANGO logs appear in terminal
+* Open http://localhost:8000/polls in browser.
+

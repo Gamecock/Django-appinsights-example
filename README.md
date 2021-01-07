@@ -1,15 +1,20 @@
-#APPINSIGHTS With DJANGO
+# APPINSIGHTS With DJANGO
 
 Based on basic Django Tutorial
 https://docs.djangoproject.com/en/3.1/intro/tutorial01/
 
-Two major areas are modified in settings.py
+## Two major areas are modified in settings.py
 1) For request data
-OPENCENSUS and MIDDLEWARE
+* OPENCENSUS 
+* MIDDLEWARE
+* callback function - shorten_url
+
+Demonstrates how to add a callback to the logging exporter.
 
 2) For 'Trace' i.e. Log Data
-LOGGING
-* Logging is currently commented out to analyse a request issue.
+* LOGGING
+
+Logs DEBUG and above to Azure and WARN and above to console
 
 ## Build Instructions
 * Rename env.txt to .env

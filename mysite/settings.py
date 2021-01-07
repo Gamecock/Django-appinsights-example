@@ -116,39 +116,49 @@ USE_L10N = True
 
 USE_TZ = True
 
-#LOGGING = {
-#    'version': 1,
-#    'disable_existing_loggers': False,
-#    'formatters': {
-#        'default': {
-#            'format': '%(asctime)s - %(levelname)s - %(processName)s - %(name)s\n%(message)s',
-#        },
-#    },
-#    'handlers': {
-#         'azure': {
-#            'level': "DEBUG",
-#            'class': 'opencensus.ext.azure.log_exporter.AzureLogHandler',
-#            'instrumentation_key':os.environ.get('APPINSIGHTS_INSTRUMENTATIONKEY'),
-#          },
-#        'console': {
-#            'level': 'DEBUG',
-#            'class': 'logging.StreamHandler',
-#        },
-#      },
-#    'loggers': {
-#        'polls': {
-#            'handlers': ['azure', 'console'],
-#            'level':'DEBUG'
-#            },
-#    },
-#}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s - %(levelname)s - %(processName)s - %(name)s\n%(message)s',
+        },
+    },
+    'handlers': {
+         'azure': {
+            'level': "DEBUG",
+            'class': 'opencensus.ext.azure.log_exporter.AzureLogHandler',
+            'instrumentation_key':os.environ.get('APPINSIGHTS_INSTRUMENTATIONKEY'),
+            "formatter": "default",
+          },
+        'console': {
+            'level': 'WARN',
+            'class': 'logging.StreamHandler',
+            "formatter": "default",
+        },
+    },
+    'loggers': {
+        'polls': {
+            'level':'DEBUG',
+            'handlers': ['azure', 'console'],
+            },
+    },
+}
+
+def shorten_url(envelope):
+#    print(envelope.data.baseData)
+    if 25 < len(envelope.data.baseData.url):
+        envelope.data.baseData["url"] = envelope.data.baseData.url[:25]+"..." 
+    return True
+
+from opencensus.ext.azure.trace_exporter import AzureExporter
+exporter = AzureExporter(service_name='mysite')
+exporter.add_telemetry_processor(shorten_url)
 
 OPENCENSUS = {
     'TRACE': {
         'SAMPLER': 'opencensus.trace.samplers.ProbabilitySampler(rate=1)',
-        'EXPORTER': '''opencensus.ext.azure.trace_exporter.AzureExporter(
-            service_name='mysite'
-        )'''
+        'EXPORTER': exporter
         #Assumes Environmental Variable 'APPINSIGHTS_INSTRUMENTATIONKEY'
     }
 }
